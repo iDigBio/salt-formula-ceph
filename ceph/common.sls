@@ -5,6 +5,8 @@
 common_packages:
   pkg.installed:
   - names: {{ common.pkgs }}
+  - require: 
+    - sls: acis-salt/repo
 
 /etc/default/ceph:
   file.managed:
