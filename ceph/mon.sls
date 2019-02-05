@@ -26,7 +26,7 @@ add_admin_keyring_to_mon_keyring:
 # nrejack added below
 gen_bootstrap_osd_keyring:
   cmd.run:
-  - name: "ceph-authtool --create-keyring /var/lib/ceph/bootstrap-osd/{{ common.get('cluster_name', 'ceph') }}.keyring --gen-key -n client.bootstrap-osd --cap mon 'profile bootstrap-osd"
+  - name: "ceph-authtool --create-keyring /var/lib/ceph/bootstrap-osd/{{ common.get('cluster_name', 'ceph') }}.keyring --gen-key -n client.bootstrap-osd --cap mon 'profile bootstrap-osd'"
   - require: 
     - pkg: mon_packages
 
