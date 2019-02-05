@@ -23,6 +23,22 @@ add_admin_keyring_to_mon_keyring:
   - require:
     - pkg: mon_packages
 
+# nrejack added below
+gen_bootstrap_osd_keyring:
+  cmd.run:
+  - name: "ceph-authtool --create-keyring /var/lib/ceph/bootstrap-osd/{{ common.get('cluster_name', 'ceph') }}.keyring --gen-key -n client.bootstrap-osd --cap mon 'profile bootstrap-osd"
+  - require: 
+    - pkg: mon_packages
+
+add_bootstrap_osd_keyring_to_mon_keyring:
+  cmd.run:
+  - name: "ceph-authtool /etc/ceph/{{ common.get('cluster_name', 'ceph') }}.mon.{{ grains.host }}.keyring --import-keyring /var/lib/ceph/bootstrap-osd/{{ common.get('cluster_name', 'ceph') }}.keyring"
+  - unless: "test -f /var/lib/ceph/mon/{{ common.get('cluster_name', 'ceph') }}-{{ grains.host }}/done"
+  - require:
+    - pkg: mon_packages
+
+# end nrejack added
+
 generate_monmap:
   cmd.run:
   - name: "monmaptool --create {%- for member in common.members %} --add {{ member.name }} {{ member.host }} {%- endfor %} --fsid {{ common.fsid }} /tmp/monmap"
